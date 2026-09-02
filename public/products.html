@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products - Meetha Tales</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/"><i class="fas fa-cookie-bite brand-icon"></i> Meetha Tales</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><span class="navbar-toggler-icon" style="filter: invert(1);"></span></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/products">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="/gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contact">Contact Us</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item" id="navCartLink" style="display:none;"><a class="nav-link cart-badge" href="/cart"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="cartCount">0</span></a></li>
+        <li class="nav-item" id="navOrdersLink" style="display:none;"><a class="nav-link" href="/orders"><i class="fas fa-receipt"></i> Orders</a></li>
+        <li class="nav-item" id="navLoginLink"><a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        <li class="nav-item" id="navLogoutLink" style="display:none;"><a class="nav-link" href="javascript:void(0)" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        <li class="nav-item"><a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Register</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-4">
+  <h2 class="text-maroon mb-4">Our Sweets Collection</h2>
+  <div class="row">
+    <!-- Sidebar Filters -->
+    <div class="col-lg-3 mb-4">
+      <div class="admin-table p-3">
+        <h5 class="text-maroon mb-3"><i class="fas fa-filter"></i> Filter Products</h5>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Category</label>
+          <select class="form-select" id="filterCategory" onchange="loadProducts()">
+            <option value="all">All Categories</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Search</label>
+          <input type="text" class="form-control" id="searchInput" placeholder="Search sweets..." oninput="debouncedSearch()">
+        </div>
+        <button class="btn btn-outline-gold w-100" onclick="clearFilters()">Clear Filters</button>
+      </div>
+    </div>
+    <!-- Products Grid -->
+    <div class="col-lg-9">
+      <div class="row g-4" id="productsGrid">
+        <div class="col-12 text-center"><div class="loading-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2024 Meetha Tales. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+<script>
+let searchTimer;
+
+// Load categories into filter dropdown
+async function loadCategories() {
+  try {
+    const data = await api('/api/categories');
+    const select = document.getElementById('filterCategory');
+    data.categories.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      opt.textContent = c.name;
+      select.appendChild(opt);
+    });
+    // Set from URL param
+    const params = new URLSearchParams(location.search);
+    if (params.get('category')) select.value = params.get('category');
+    if (params.get('search')) document.getElementById('searchInput').value = params.get('search');
+  } catch(e) {}
+}
+
+async function loadProducts() {
+  const category = document.getElementById('filterCategory').value;
+  const search = document.getElementById('searchInput').value;
+  const container = document.getElementById('productsGrid');
+
+  try {
+    let url = '/api/products?status=active';
+    if (category && category !== 'all') url += '&category=' + encodeURIComponent(category);
+    if (search) url += '&search=' + encodeURIComponent(search);
+
+    const data = await api(url);
+    if (!data.products || data.products.length === 0) {
+      container.innerHTML = '<div class="col-12"><div class="empty-state"><i class="fas fa-search icon"></i><p>No products found. Try different filters.</p></div></div>';
+      return;
+    }
+    container.innerHTML = data.products.map(p => `
+      <div class="col-sm-6 col-md-4">
+        <div class="product-card">
+          <img src="${getProductImageUrl(p.image)}" class="product-img" alt="${p.name}" onerror="this.src='${PRODUCT_IMAGES['default.jpg']}'">
+          <div class="product-body">
+            <span class="product-category">${p.category_name || 'Sweets'}</span>
+            <h5 class="product-name">${p.name}</h5>
+            <div class="rating mb-2">${getStars(parseFloat(p.rating))} <small class="text-muted">(${p.rating})</small></div>
+            <div class="product-price">&#8377;${parseFloat(p.price).toFixed(0)} <span class="unit">/ ${p.unit}</span></div>
+            <div class="mb-2"><small class="text-muted">Available: ${p.quantity} ${p.unit}</small> ${getStockBadge(p.quantity)}</div>
+            <div class="d-flex gap-2 mt-auto">
+              <button class="btn btn-gold btn-sm flex-grow-1" onclick="addToCart(${p.id})" ${p.quantity <= 0 ? 'disabled' : ''}>
+                <i class="fas fa-cart-plus"></i> Add to Cart
+              </button>
+              <a href="/product?id=${p.id}" class="btn btn-outline-gold btn-sm"><i class="fas fa-eye"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    container.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-exclamation-circle icon"></i><p>${err.message}</p></div></div>`;
+  }
+}
+
+function debouncedSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(loadProducts, 400);
+}
+
+function clearFilters() {
+  document.getElementById('filterCategory').value = 'all';
+  document.getElementById('searchInput').value = '';
+  loadProducts();
+}
+
+loadCategories().then(loadProducts);
+</script>
+</body>
+</html>

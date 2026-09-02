@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Meetha Tales</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/"><i class="fas fa-cookie-bite brand-icon"></i> Meetha Tales</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><span class="navbar-toggler-icon" style="filter: invert(1);"></span></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="/gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contact">Contact Us</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item" id="navCartLink" style="display:none;"><a class="nav-link cart-badge" href="/cart"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="cartCount">0</span></a></li>
+        <li class="nav-item" id="navOrdersLink" style="display:none;"><a class="nav-link" href="/orders"><i class="fas fa-receipt"></i> Orders</a></li>
+        <li class="nav-item" id="navLoginLink"><a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        <li class="nav-item" id="navLogoutLink" style="display:none;"><a class="nav-link" href="javascript:void(0)" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        <li class="nav-item"><a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Register</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<section class="py-5">
+  <div class="container">
+    <div class="row align-items-center mb-5">
+      <div class="col-lg-6 mb-4">
+        <h2 class="text-maroon">Our Sweet Story</h2>
+        <div class="underline bg-gold" style="width:60px;height:4px;border-radius:2px;margin:0.5rem 0 1rem;"></div>
+        <p class="about-text">Meetha Tales began as a small family-run sweet shop with a simple mission: to bring the authentic taste of traditional Indian sweets to every home. For over three decades, we have been crafting sweets using time-honored recipes passed down through generations.</p>
+        <p class="about-text">Our master sweet makers start before dawn each day, preparing fresh batches of pedha, laddu, jalebi, and many more delights. We use only the finest ingredients - pure cow ghee, fresh milk from local farms, premium cashews and almonds, and authentic cardamom and saffron.</p>
+        <p class="about-text">From everyday treats to festival specials and wedding bulk orders, Meetha Tales has become a trusted name for sweet lovers across Bengaluru and beyond.</p>
+      </div>
+      <div class="col-lg-6">
+        <img src="https://images.pexels.com/photos/8887000/pexels-photo-8887000.jpeg?auto=compress&cs=tinysrgb&h=500&w=600" class="img-fluid rounded-card shadow-card" alt="Sweet Shop">
+      </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+      <div class="col-md-4">
+        <div class="category-card">
+          <i class="fas fa-hand-holding-heart cat-icon"></i>
+          <h5 class="cat-name">Made with Love</h5>
+          <p class="text-muted">Every sweet is crafted with care and dedication by our expert team.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="category-card">
+          <i class="fas fa-leaf cat-icon"></i>
+          <h5 class="cat-name">Pure & Natural</h5>
+          <p class="text-muted">No artificial colors, preservatives, or compromise on quality.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="category-card">
+          <i class="fas fa-medal cat-icon"></i>
+          <h5 class="cat-name">Trusted Quality</h5>
+          <p class="text-muted">Three decades of serving happy customers across the region.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row text-center g-4">
+      <div class="col-md-3 col-6">
+        <div class="admin-stat-card justify-content-center">
+          <div><div class="stat-value">30+</div><div class="stat-label">Years of Experience</div></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="admin-stat-card justify-content-center">
+          <div><div class="stat-value">50+</div><div class="stat-label">Sweet Varieties</div></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="admin-stat-card justify-content-center">
+          <div><div class="stat-value">10K+</div><div class="stat-label">Happy Customers</div></div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="admin-stat-card justify-content-center">
+          <div><div class="stat-value">100%</div><div class="stat-label">Pure Ghee</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container"><div class="footer-bottom"><p>&copy; 2024 Meetha Tales. All rights reserved.</p></div></div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+</body>
+</html>

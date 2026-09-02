@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Meetha Tales</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/"><i class="fas fa-cookie-bite brand-icon"></i> Meetha Tales</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><span class="navbar-toggler-icon" style="filter: invert(1);"></span></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" id="navCartLink" style="display:none;"><a class="nav-link cart-badge" href="/cart"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="cartCount">0</span></a></li>
+        <li class="nav-item" id="navLogoutLink" style="display:none;"><a class="nav-link" href="javascript:void(0)" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <h2 class="text-maroon mb-4"><i class="fas fa-check-circle"></i> Checkout</h2>
+  <div class="row" id="checkoutContainer">
+    <div class="col-12 text-center"><div class="loading-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+  </div>
+</div>
+
+<!-- Order Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center p-5">
+        <i class="fas fa-check-circle text-success" style="font-size:4rem;"></i>
+        <h3 class="text-maroon mt-3">Order Placed!</h3>
+        <p class="text-muted" id="successMsg"></p>
+        <a href="/orders" class="btn btn-gold mt-3">View My Orders</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container"><div class="footer-bottom"><p>&copy; 2024 Meetha Tales. All rights reserved.</p></div></div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+<script>
+let cartData = null;
+
+async function loadCheckout() {
+  if (!isLoggedIn()) { location.href = '/login'; return; }
+  try {
+    cartData = await api('/api/cart');
+    const container = document.getElementById('checkoutContainer');
+    if (!cartData.items || cartData.items.length === 0) {
+      container.innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-cart-arrow-down icon"></i><h4>Your cart is empty</h4><a href="/products" class="btn btn-gold mt-3">Browse Products</a></div></div>`;
+      return;
+    }
+    const customer = getCustomer();
+    container.innerHTML = `
+      <div class="col-lg-7">
+        <div class="admin-table p-4 mb-4">
+          <h5 class="text-maroon mb-3"><i class="fas fa-map-marker-alt"></i> Delivery Address</h5>
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="delName" value="${customer ? customer.full_name : ''}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input type="text" class="form-control" id="delPhone" value="${customer ? customer.phone : ''}">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Delivery Address</label>
+            <textarea class="form-control" id="delAddress" rows="3">${customer ? customer.address : ''}</textarea>
+          </div>
+        </div>
+        <div class="admin-table p-4">
+          <h5 class="text-maroon mb-3"><i class="fas fa-credit-card"></i> Payment Method (Demo)</h5>
+          <div class="d-flex gap-3 flex-wrap">
+            <label class="d-flex align-items-center gap-2 cursor-pointer p-3 border rounded w-100">
+              <input type="radio" name="payment" value="cod" checked> <i class="fas fa-money-bill-wave text-success fs-4"></i> Cash on Delivery
+            </label>
+            <label class="d-flex align-items-center gap-2 cursor-pointer p-3 border rounded w-100">
+              <input type="radio" name="payment" value="upi"> <i class="fab fa-upi-app text-primary fs-4"></i> UPI Payment
+            </label>
+            <label class="d-flex align-items-center gap-2 cursor-pointer p-3 border rounded w-100">
+              <input type="radio" name="payment" value="card"> <i class="fas fa-credit-card text-warning fs-4"></i> Card Payment
+            </label>
+          </div>
+          <div class="alert alert-info mt-3"><i class="fas fa-info-circle"></i> This is a demo payment flow. No real payment will be processed.</div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="cart-summary">
+          <h5 class="text-maroon mb-3">Order Summary</h5>
+          ${cartData.items.map(item => `
+            <div class="d-flex justify-content-between mb-2">
+              <span>${item.name} x ${item.quantity}</span>
+              <span>&#8377;${(parseFloat(item.price) * item.quantity).toFixed(0)}</span>
+            </div>
+          `).join('')}
+          <hr>
+          <div class="summary-row"><span>Subtotal:</span><span>&#8377;${cartData.subtotal.toFixed(0)}</span></div>
+          <div class="summary-row"><span>Delivery:</span><span class="text-success">Free</span></div>
+          <div class="summary-row total-row"><span>Total:</span><span>&#8377;${cartData.total.toFixed(0)}</span></div>
+          <button class="btn btn-gold w-100 btn-lg mt-3" onclick="placeOrder()"><i class="fas fa-check-circle"></i> Place Order</button>
+          <a href="/cart" class="btn btn-outline-gold w-100 mt-2">Back to Cart</a>
+        </div>
+      </div>
+    `;
+  } catch (err) {
+    document.getElementById('checkoutContainer').innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-exclamation-circle icon"></i><p>${err.message}</p></div></div>`;
+  }
+}
+
+async function placeOrder() {
+  const address = document.getElementById('delAddress').value.trim();
+  if (!address) { showToast('Please enter a delivery address.', 'error'); return; }
+
+  const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+  const items = cartData.items.map(item => ({ product_id: item.product_id, quantity: item.quantity }));
+
+  try {
+    showLoading();
+    const data = await api('/api/orders', {
+      method: 'POST',
+      body: JSON.stringify({ items, payment_method: paymentMethod, delivery_address: address }),
+    });
+    hideLoading();
+    document.getElementById('successMsg').textContent = `Your order #${data.order_id} has been placed successfully! Total: Rs. ${data.total_amount.toFixed(0)}`;
+    new bootstrap.Modal(document.getElementById('successModal')).show();
+    updateCartCount();
+  } catch (err) {
+    hideLoading();
+    showToast(err.message, 'error');
+  }
+}
+
+loadCheckout();
+</script>
+</body>
+</html>

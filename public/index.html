@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meetha Tales - Authentic Indian Sweets</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <i class="fas fa-cookie-bite brand-icon"></i> Meetha Tales
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain">
+      <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="/gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contact">Contact Us</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item">
+          <form class="d-flex search-form me-2" onsubmit="event.preventDefault(); location.href='/products?search='+document.getElementById('navSearch').value;">
+            <input class="form-control" type="search" id="navSearch" placeholder="Search sweets...">
+            <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+          </form>
+        </li>
+        <li class="nav-item" id="navCartLink" style="display:none;">
+          <a class="nav-link cart-badge" href="/cart">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="badge-count" id="cartCount">0</span>
+          </a>
+        </li>
+        <li class="nav-item" id="navOrdersLink" style="display:none;">
+          <a class="nav-link" href="/orders"><i class="fas fa-receipt"></i> Orders</a>
+        </li>
+        <li class="nav-item" id="navLoginLink">
+          <a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+        </li>
+        <li class="nav-item" id="navLogoutLink" style="display:none;">
+          <a class="nav-link" href="javascript:void(0)" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Register</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <h1>Welcome to Meetha Tales</h1>
+    <p>Indulge in the finest authentic Indian sweets, crafted with pure ghee, premium ingredients, and decades of tradition. Every bite tells a sweet story.</p>
+    <a href="/products" class="btn btn-gold btn-lg"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="py-5">
+  <div class="container">
+    <div class="section-title">
+      <h2>Featured Sweets</h2>
+      <div class="underline"></div>
+      <p>Our most popular and loved sweets, freshly made every day</p>
+    </div>
+    <div class="row g-4" id="featuredProducts">
+      <div class="col-12 text-center">
+        <div class="loading-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <a href="/products" class="btn btn-outline-gold">View All Products <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5 bg-cream">
+  <div class="container">
+    <div class="section-title">
+      <h2>Our Categories</h2>
+      <div class="underline"></div>
+      <p>Explore our wide range of traditional Indian sweet categories</p>
+    </div>
+    <div class="row g-3" id="categoriesList">
+      <div class="col-12 text-center">
+        <div class="loading-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="about-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-4">
+        <h2>About Meetha Tales</h2>
+        <p class="about-text mt-3">
+          Meetha Tales has been serving authentic Indian sweets for over three decades. What started as a small family shop has grown into a beloved destination for sweet lovers across the city. Our sweets are made using traditional recipes passed down through generations, with the finest ingredients - pure ghee, fresh milk, premium dry fruits, and authentic spices.
+        </p>
+        <p class="about-text">
+          Every sweet tells a story - of festivals celebrated, of milestones achieved, of moments shared. We take pride in being part of your sweetest memories.
+        </p>
+        <div class="about-feature">
+          <i class="fas fa-leaf icon"></i>
+          <span><strong>Pure Ingredients:</strong> No artificial colors or preservatives</span>
+        </div>
+        <div class="about-feature">
+          <i class="fas fa-award icon"></i>
+          <span><strong>Traditional Recipes:</strong> Passed down through generations</span>
+        </div>
+        <div class="about-feature">
+          <i class="fas fa-truck icon"></i>
+          <span><strong>Fresh Daily:</strong> Made fresh every single day</span>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <img src="https://images.pexels.com/photos/8887061/pexels-photo-8887061.jpeg?auto=compress&cs=tinysrgb&h=500&w=600" class="img-fluid rounded-card shadow-card" alt="Indian Sweets">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact CTA -->
+<section class="py-5">
+  <div class="container text-center">
+    <h2 class="text-maroon">Have a Sweet Question?</h2>
+    <p class="text-muted mb-4">We're here to help with orders, custom gift boxes, and bulk inquiries.</p>
+    <a href="/contact" class="btn btn-maroon btn-lg"><i class="fas fa-envelope"></i> Contact Us</a>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-4 mb-4">
+        <h5><i class="fas fa-cookie-bite"></i> Meetha Tales</h5>
+        <p>Your trusted destination for authentic Indian sweets. Made with love, served with tradition.</p>
+      </div>
+      <div class="col-lg-2 mb-4">
+        <h5>Quick Links</h5>
+        <ul class="footer-links">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/gallery">Gallery</a></li>
+          <li><a href="/contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 mb-4">
+        <h5>Categories</h5>
+        <ul class="footer-links">
+          <li><a href="/products?category=Pedha">Pedha</a></li>
+          <li><a href="/products?category=Laddu">Laddu</a></li>
+          <li><a href="/products?category=Kaju Sweets">Kaju Sweets</a></li>
+          <li><a href="/products?category=Bengali Sweets">Bengali Sweets</a></li>
+          <li><a href="/products?category=Gift Boxes">Gift Boxes</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 mb-4">
+        <h5>Contact Info</h5>
+        <ul class="footer-links">
+          <li><i class="fas fa-phone"></i> +91 9876543210</li>
+          <li><i class="fas fa-envelope"></i> info@meethatales.com</li>
+          <li><i class="fas fa-map-marker-alt"></i> Bengaluru, Karnataka, India</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2024 Meetha Tales. All rights reserved. | Made with <i class="fas fa-heart" style="color:var(--gold)"></i> for sweet lovers</p>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+<script>
+// Load featured products on homepage
+async function loadFeatured() {
+  try {
+    const data = await api('/api/products?status=active');
+    const container = document.getElementById('featuredProducts');
+    if (!data.products || data.products.length === 0) {
+      container.innerHTML = '<div class="col-12"><div class="empty-state"><i class="fas fa-box-open icon"></i><p>No products available right now.</p></div></div>';
+      return;
+    }
+    // Show first 8 products
+    const featured = data.products.slice(0, 8);
+    container.innerHTML = featured.map(p => `
+      <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class="product-card">
+          <img src="${getProductImageUrl(p.image)}" class="product-img" alt="${p.name}" onerror="this.src='${PRODUCT_IMAGES['default.jpg']}'">
+          <div class="product-body">
+            <span class="product-category">${p.category_name || 'Sweets'}</span>
+            <h5 class="product-name">${p.name}</h5>
+            <div class="rating mb-2">${getStars(parseFloat(p.rating))} <small class="text-muted">(${p.rating})</small></div>
+            <div class="product-price">&#8377;${parseFloat(p.price).toFixed(0)} <span class="unit">/ ${p.unit}</span></div>
+            <div class="mb-2">${getStockBadge(p.quantity)}</div>
+            <div class="d-flex gap-2 mt-auto">
+              <button class="btn btn-gold btn-sm flex-grow-1" onclick="addToCart(${p.id})" ${p.quantity <= 0 ? 'disabled' : ''}>
+                <i class="fas fa-cart-plus"></i> Add
+              </button>
+              <a href="/product?id=${p.id}" class="btn btn-outline-gold btn-sm">Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    document.getElementById('featuredProducts').innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-exclamation-circle icon"></i><p>Could not load products. Please make sure the server is running.</p></div></div>`;
+  }
+}
+
+// Load categories
+async function loadCategories() {
+  try {
+    const data = await api('/api/categories');
+    const container = document.getElementById('categoriesList');
+    const icons = { 'Pedha':'fas fa-circle', 'Laddu':'fas fa-cookie', 'Jalebi':'fas fa-pretzel', 'Mysore Pak':'fas fa-birthday-cake',
+      'Kaju Sweets':'fas fa-nutritionix', 'Bengali Sweets':'fas fa-cheese', 'Milk Sweets':'fas fa-glass-whiskey',
+      'Dry Fruits':'fas fa-seedling', 'Snacks':'fas fa-drumstick-bite', 'Gift Boxes':'fas fa-gift' };
+    if (!data.categories || data.categories.length === 0) {
+      container.innerHTML = '<p class="text-center text-muted">No categories found.</p>';
+      return;
+    }
+    container.innerHTML = data.categories.map(c => `
+      <div class="col-6 col-md-3 col-lg-2">
+        <div class="category-card" onclick="location.href='/products?category=${encodeURIComponent(c.name)}'">
+          <i class="${icons[c.name] || 'fas fa-cookie-bite'} cat-icon"></i>
+          <div class="cat-name">${c.name}</div>
+        </div>
+      </div>
+    `).join('');
+  } catch (err) {
+    document.getElementById('categoriesList').innerHTML = '<p class="text-center text-muted">Could not load categories.</p>';
+  }
+}
+
+loadFeatured();
+loadCategories();
+</script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - Meetha Tales</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand" href="/"><i class="fas fa-cookie-bite brand-icon"></i> Meetha Tales</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMain"><span class="navbar-toggler-icon" style="filter: invert(1);"></span></button>
+    <div class="collapse navbar-collapse" id="navMain">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="/about">About Us</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/products">Products</a></li>
+        <li class="nav-item"><a class="nav-link" href="/gallery">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="/contact">Contact Us</a></li>
+      </ul>
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item" id="navCartLink" style="display:none;"><a class="nav-link cart-badge" href="/cart"><i class="fas fa-shopping-cart"></i><span class="badge-count" id="cartCount">0</span></a></li>
+        <li class="nav-item" id="navOrdersLink" style="display:none;"><a class="nav-link" href="/orders"><i class="fas fa-receipt"></i> Orders</a></li>
+        <li class="nav-item" id="navLoginLink"><a class="nav-link" href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+        <li class="nav-item" id="navLogoutLink" style="display:none;"><a class="nav-link" href="javascript:void(0)" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        <li class="nav-item"><a class="nav-link" href="/register"><i class="fas fa-user-plus"></i> Register</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <div id="productDetail" class="row">
+    <div class="col-12 text-center"><div class="loading-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container"><div class="footer-bottom"><p>&copy; 2024 Meetha Tales. All rights reserved.</p></div></div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/app.js"></script>
+<script>
+async function loadProduct() {
+  const params = new URLSearchParams(location.search);
+  const id = params.get('id');
+  if (!id) { location.href = '/products'; return; }
+
+  try {
+    const data = await api('/api/products/' + id);
+    const p = data.product;
+    const container = document.getElementById('productDetail');
+    container.innerHTML = `
+      <div class="col-lg-6 mb-4">
+        <img src="${getProductImageUrl(p.image)}" class="img-fluid rounded-card shadow-card" alt="${p.name}" onerror="this.src='${PRODUCT_IMAGES['default.jpg']}'">
+      </div>
+      <div class="col-lg-6">
+        <span class="product-category text-gold fw-bold">${p.category_name || 'Sweets'}</span>
+        <h1 class="text-maroon mb-2">${p.name}</h1>
+        <div class="rating mb-3" style="font-size:1.2rem;">${getStars(parseFloat(p.rating))} <span class="text-muted">(${p.rating} rating)</span></div>
+        <h3 class="text-maroon mb-3">&#8377;${parseFloat(p.price).toFixed(0)} <span class="text-muted fs-6">/ ${p.unit}</span></h3>
+        <p class="text-muted mb-3">${p.description || 'No description available.'}</p>
+        <div class="mb-3">${getStockBadge(p.quantity)} <span class="text-muted ms-2">Available: ${p.quantity} ${p.unit}</span></div>
+        <div class="mb-3">
+          <label class="form-label fw-bold">Quantity</label>
+          <div class="d-flex align-items-center gap-2">
+            <button class="qty-btn" onclick="changeQty(-1)"><i class="fas fa-minus"></i></button>
+            <input type="number" class="form-control text-center" id="qtyInput" value="1" min="1" max="${p.quantity}" style="width:80px;">
+            <button class="qty-btn" onclick="changeQty(1)"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+        <div class="d-flex gap-3 mt-4">
+          <button class="btn btn-gold btn-lg" onclick="addToCart(${p.id}, getQty())" ${p.quantity <= 0 ? 'disabled' : ''}>
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+          <a href="/cart" class="btn btn-maroon btn-lg"><i class="fas fa-shopping-bag"></i> View Cart</a>
+        </div>
+        <a href="/products" class="text-maroon mt-3 d-inline-block"><i class="fas fa-arrow-left"></i> Back to Products</a>
+      </div>
+    `;
+  } catch (err) {
+    document.getElementById('productDetail').innerHTML = `<div class="col-12"><div class="empty-state"><i class="fas fa-exclamation-circle icon"></i><p>${err.message}</p><a href="/products" class="btn btn-maroon mt-3">Back to Products</a></div></div>`;
+  }
+}
+
+function getQty() { return parseInt(document.getElementById('qtyInput').value) || 1; }
+function changeQty(delta) {
+  const input = document.getElementById('qtyInput');
+  let val = parseInt(input.value) + delta;
+  if (val < 1) val = 1;
+  if (val > parseInt(input.max)) val = parseInt(input.max);
+  input.value = val;
+}
+
+loadProduct();
+</script>
+</body>
+</html>

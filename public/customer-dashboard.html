@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Customer Dashboard - Meetha Tales</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+
+        <a class="navbar-brand" href="/">
+            <i class="fas fa-cookie-bite brand-icon"></i>
+            Meetha Tales
+        </a>
+
+        <div>
+            <button class="btn btn-gold" onclick="logoutCustomer()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+
+    </div>
+</nav>
+
+
+<div class="container py-5">
+
+    <h1 class="text-maroon">
+        Welcome, <span id="customerName">Customer</span>! 👋
+    </h1>
+
+    <p class="text-muted">
+        Welcome to your Meetha Tales customer dashboard.
+    </p>
+
+
+    <div class="row g-4 mt-3">
+
+        <div class="col-md-4">
+            <div class="card p-4 text-center shadow">
+                <i class="fas fa-shopping-bag fa-3x mb-3"></i>
+                <h4>Browse Products</h4>
+                <p>Explore our delicious sweets.</p>
+                <a href="/products" class="btn btn-gold">
+                    View Products
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card p-4 text-center shadow">
+                <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                <h4>My Cart</h4>
+                <p>View products added to your cart.</p>
+                <a href="/cart" class="btn btn-gold">
+                    View Cart
+                </a>
+            </div>
+        </div>
+
+
+        <div class="col-md-4">
+            <div class="card p-4 text-center shadow">
+                <i class="fas fa-receipt fa-3x mb-3"></i>
+                <h4>My Orders</h4>
+                <p>View your previous orders.</p>
+                <a href="/orders" class="btn btn-gold">
+                    My Orders
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const customer = JSON.parse(localStorage.getItem('customer'));
+
+const token = localStorage.getItem('token');
+
+
+// If customer is not logged in
+if (!token || !customer) {
+
+    window.location.href = '/login';
+
+}
+
+
+// Display customer name
+if (customer) {
+
+    document.getElementById('customerName').textContent =
+        customer.full_name || customer.name || customer.email;
+
+}
+
+
+// Logout
+function logoutCustomer() {
+
+    localStorage.removeItem('token');
+
+    localStorage.removeItem('customer');
+
+    window.location.href = '/login';
+
+}
+
+</script>
+
+</body>
+</html>
